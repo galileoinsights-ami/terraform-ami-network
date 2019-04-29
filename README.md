@@ -16,6 +16,7 @@ This is used to setup:
 2. **AWS Secret Scanner**: Install git-secrets. Visit https://github.com/awslabs/git-secrets. This is used to scan for aws credentials before a commit occurs.
 3. **Terraform**: v0.11 Installed
 4. **Execute AMI-Security**: Run [AMI-Security Terraform module](https://github.com/galileoinsights-ami/terraform-ami-security)
+5. Have a `setup.sh` file which exports all the environment varibles mentioned below in the root directory of this workspace
 
 ## Setup Environment Variable
 
