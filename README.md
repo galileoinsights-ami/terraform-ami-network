@@ -8,6 +8,7 @@ This is used to setup:
 * Route Tables
 * Internet Gateways
 * Security Groups
+* DB Subnet Group
 
 ## Pre Requisites
 

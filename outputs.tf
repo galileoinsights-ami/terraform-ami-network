@@ -18,6 +18,11 @@ output "database_subnets" {
   value = "${module.vpc.database_subnets}"
 }
 
+output "default_database_subnet_group" {
+  description = "The Default Database Subnet Group"
+  value = "${aws_db_subnet_group.default.id}"
+}
+
 output "nat_public_ips" {
   description = "List of all NAT box Public IPs"
   value = "${aws_eip.nat.*.public_ip}"

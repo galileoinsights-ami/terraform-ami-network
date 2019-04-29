@@ -32,6 +32,7 @@ data "aws_availability_zones" "available" {
 resource "aws_eip" "nat" {
   count = "${local.number_nat_eips}"
   vpc = true
+  tags = "${var.default_aws_tags}"
 }
 
 ## Building the VPC
@@ -48,6 +49,9 @@ module "vpc" {
   public_subnets  = "${split(",",var.vpc["public_subnets"])}"
   database_subnets  = "${split(",",var.vpc["database_subnets"])}"
 
+  # Database subnet group to be created separately for better control
+  create_database_subnet_group = false
+
   enable_nat_gateway = "${lookup(var.vpc,"enable_nat_gateway")}"
   single_nat_gateway = "${lookup(var.vpc,"single_nat_gateway")}"
   one_nat_gateway_per_az = "${lookup(var.vpc,"one_nat_gateway_per_az")}"
@@ -56,10 +60,15 @@ module "vpc" {
   external_nat_ip_ids = ["${aws_eip.nat.*.id}"]
 
 
-  tags = {
-    Terraform = "true"
-    Environment = "dev"
-  }
+  tags = "${var.default_aws_tags}"
+}
+
+## Creating the database subnet group to be used by RDS instances
+resource "aws_db_subnet_group" "default" {
+  name       = "default_db_subnet_group"
+  subnet_ids = ["${module.vpc.database_subnets}"]
+
+  tags = "${var.default_aws_tags}"
 }
 
 ## Renaming the Default SG to with a good name
@@ -80,9 +89,7 @@ resource "aws_default_security_group" "default_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "ami-default-sg"
-  }
+  tags = "${merge(map("Name", "ami_default_sg"),var.default_aws_tags)}"
 }
 
 
@@ -114,9 +121,7 @@ resource "aws_security_group" "web_sg" {
     cidr_blocks     = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "web_sg"
-  }
+  tags = "${merge(map("Name", "web_sg"),var.default_aws_tags)}"
 }
 
 ## Security group to be applied to Bastion Hosts
@@ -142,7 +147,6 @@ resource "aws_security_group" "bastion_sg" {
     cidr_blocks     = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "bastion_sg"
-  }
+
+  tags = "${merge(map("Name", "bastion_sg"),var.default_aws_tags)}"
 }
