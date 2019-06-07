@@ -1,3 +1,4 @@
 .DS_Store
 .terraform
-setup.sh
+setup-*.sh
+destroy.sh

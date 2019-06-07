@@ -137,7 +137,7 @@ resource "aws_security_group" "bastion_sg" {
     protocol    = "tcp"
 
     # Ideally should be restricted to the organizaiotns internal CIDR blocs
-    #cidr_blocks =
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

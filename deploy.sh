@@ -1,6 +1,8 @@
 #!/bin/sh
 
-source setup.sh
+source setup-$ENV.sh
+
+rm -rf .terraform
 
 terraform init \
 	-backend=true \
